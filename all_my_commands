@@ -1,0 +1,77 @@
+
+vagrant up
+
+# vagrant snapshot save  		[vm-name] NAME
+# vagrant snapshot restore 	[vm-name] NAME
+# vagrant snapshot list
+# vagrant snapshot delete 	[vm-name] NAME
+
+#login to app1
+
+vagrant ssh app1
+
+#docker image rm imageid
+
+vi Dockerfile
+
+sudo su
+sudo docker images
+sudo docker build -t ansiblebase.1.0 .
+sudo docker login docker.io
+
+Username:
+Password: password
+	
+sudo docker images
+sudo docker tag ansiblebase.1.0 sunnybhatnagar/ansiblebase.1.0
+sudo docker push sunnybhatnagar/ansiblebase.1.0
+sudo docker pull sunnybhatnagar/ansiblebase.1.0:latest
+
+-------------------------------------------------------------------------------
+create a container and run it from images
+
+docker ps -a
+
+docker run -itd --network host --name ansiblebase  sunnybhatnagar/ansiblebase.1.0
+docker exec -it ansiblebase bash
+
+-------------------------------------------------------------------------------
+
+--Inside container --
+
+#It will store it here: /root/.ansible/roles/geerlingguy.postgresql
+ansible-galaxy install geerlingguy.postgresql
+
+#Check IP
+ifconfig
+
+#[Ansible] Add DNS / IP resolver to local host on container
+
+vi /etc/hosts
+127.0.0.1   localhost localhost.local
+127.0.1.1 app1.dev app
+192.168.3.5 app2.dev app2
+
+#[Ansible] Ansible config --
+
+vi /etc/ansible/hosts
+[targets]
+
+localhost              ansible_connection=local
+app2.dev			   ansible_connection=ssh        ansible_user=vagrant
+
+#[Ansible] Source docker container:
+
+ssh-keygen
+#enter enter
+
+cat /root/.ssh/id_rsa.pub
+
+#[Ansible] Now, go to destination server:
+vi .ssh/authorized_keys
+#enter the public key from docker container and that's it. 
+
+#[Ansible] Test connectivity and access
+ansible all -m ping
+	
+
