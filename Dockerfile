@@ -17,5 +17,3 @@ RUN mkdir /ansible && \
     echo 'localhost' > /etc/ansible/hosts
 
 WORKDIR /ansible
-
-CMD [ "ansible-playbook", "--version" ]
