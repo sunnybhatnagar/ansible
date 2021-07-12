@@ -1,2 +1,1 @@
-# pulp
-pulp docker file
+#Ansible Base image
